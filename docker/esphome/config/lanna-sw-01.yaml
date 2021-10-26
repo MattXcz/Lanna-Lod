@@ -1,0 +1,62 @@
+esphome:
+  name: "${node_id}"
+  platform: ESP8266
+  board: esp8285
+
+substitutions:
+  node_id: "lanna-sw-01"
+
+wifi:
+  ssid: !secret lanna_wifi
+  password: !secret lanna_pass
+  fast_connect: true
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${node_id} Fallback Hotspot"
+    password: !secret lanna_app_pass
+    
+captive_portal:
+#--------------------------#
+
+binary_sensor:
+  - platform: status
+    name: "${node_id}"
+
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Tlačítko ${node_id}"
+    on_press:
+      - switch.toggle: relay
+
+switch:
+  - platform: gpio
+    name: "${node_id} rele"
+    pin: GPIO12
+    id: relay
+  
+  - platform: restart
+    name: "IOT ${node_id} RESTART"
+    
+status_led:
+  pin:
+    number: GPIO13
+    inverted: yes
+
+
+text_sensor:
+  - platform: version
+    name: "${node_id} version"
+    hide_timestamp: True
+
+
+#--------------------------#
+ota:
+  password: !secret lanna_ota_pass
+# Enable logging
+logger:
+# Enable Home Assistant API
+api:
