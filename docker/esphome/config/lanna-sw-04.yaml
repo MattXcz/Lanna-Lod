@@ -7,14 +7,14 @@ substitutions:
   node_id: "lanna-sw-04"
 
 wifi:
-  ssid: !secret lanna_wifi
-  password: !secret lanna_pass
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
   fast_connect: true
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "${node_id} Fallback Hotspot"
-    password: !secret lanna_app_pass
+    password: !secret AP_pass
     
 captive_portal:
 #--------------------------#
@@ -38,25 +38,29 @@ switch:
     pin: GPIO12
     id: relay
   
-  - platform: restart
-    name: "IOT ${node_id} RESTART"
-    
 status_led:
   pin:
     number: GPIO13
     inverted: yes
 
 
+#--------------------------#
 text_sensor:
   - platform: version
     name: "${node_id} version"
     hide_timestamp: True
 
+button:
+  - platform: restart
+    name: "IOT ${node_id} RESTART"
+  - platform: safe_mode
+    name: "IOT ${node_id} Safe Mode"
 
-#--------------------------#
-ota:
-  password: !secret lanna_ota_pass
-# Enable logging
 logger:
-# Enable Home Assistant API
+ota:
+  password: !secret ota_pass
 api:
+  password: !secret api_pass
+  reboot_timeout: 15min
+  encryption:
+   key: !secret api_encrypt
