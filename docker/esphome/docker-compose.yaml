@@ -1,9 +1,0 @@
-version: '3.6'
-services:
-  esphome:
-    container_name: Esphome
-    image: esphome/esphome
-    network_mode: host
-    restart: unless-stopped
-    volumes:
-      - ./config:/config
